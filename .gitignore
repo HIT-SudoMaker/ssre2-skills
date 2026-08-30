@@ -1,0 +1,9 @@
+.scratch/
+node_modules/
+*.tgz
+.DS_Store
+
+# Local research inputs and run-scoped SSRE2 artifacts
+/reference/
+/dev/design/
+/dev/research/

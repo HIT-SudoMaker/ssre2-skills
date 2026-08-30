@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node dev/check.mjs",
+    "release:check": "node dev/check.mjs --install"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
