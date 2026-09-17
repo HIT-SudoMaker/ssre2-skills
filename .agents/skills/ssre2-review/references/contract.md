@@ -1,201 +1,89 @@
 # SSRE2 Review Contract
 
-SSRE2 Review is the retrospective mode of Shared Doctrine. It recovers an observed Scientific Map from a
-pinned implementation, returns five non-compensating verdicts, and offers read-only repair guidance.
+This contract owns retrospective Review, Scope succession and verdict calibration. Inputs are the requested source
+or file scope, available authority and repository context. Output is a sealed SSRE2-SCOPE.md plus SSRE2-REVIEW.md.
+[Dimensions](dimensions.md) owns the five scientific operators.
 
-Read Shared Doctrine before this file. This contract owns only the Review workflow.
+## Protocol
 
-## Interface
+### 1. Collect facts on one source identity
 
-The caller provides:
+Record actual content identities; a commit label alone does not identify dirty or explicit files. Keep probe
+environment identity separate. Recover the authority order and observed Scientific Map, reusing material Design
+IDs with freshly observed epistemic states. Account for prior debt and unknowns explicitly.
 
-1. a target project and pinned source snapshot or explicit file scope;
-2. available authoritative scientific material and owner statements;
-3. an approved artifact location or enough project context to resolve one;
-4. optional paths to a prior SSRE2 Design or code-review artifacts.
+Read all five operators before sealing so collection can serve every Audit. Collect facts and gaps, not verdicts.
+Prefer existing receipts or static inspection when decisive. Before a probe, name its `CLM`/`COR`, expected
+distinction, normalization, regime, command/location and stop condition. Same-path tests are consistency evidence.
 
-A prior SSRE2-DESIGN.md supplies DECLARED intent only. Code-review artifacts enter as Sibling
-References: Standards and Spec remain separate judgments whose locations may be cited but whose verdicts
-cannot enter scientific proof.
+Use the declared environment. When decisive evidence needs an external environment, read only
+[Probe environment](conditional-execution.md#probe-environment). Setup failure or timeout becomes a claim-specific
+evidence gap with a recovery path. Continue independent work.
 
-Resolve the Artifact Route through Shared Doctrine. Review returns SSRE2-SCOPE.md and SSRE2-REVIEW.md there.
-The target project, its dependencies, lockfiles, configuration, source, tests, and scientific data remain
-unchanged.
+### 2. Seal the sole observed Scope
 
-## Workflow
+Resolve the Artifact Route. SSRE2-SCOPE.md solely owns observed source/authority/domain facts, the Map and Identity
+Ledger, intake coverage, receipt identities, optional references and inspection focus.
 
-### 1. Lock snapshot and seal the Review Scope
+Required intake accounts for every caller-requested scientific claim and every scientific promise encountered on
+the inspected public surface: request/source location → `CLM`/`COR` plus regime, or an explicit exclusion with
+its scope basis. Missing evidence creates an `UNK`; it does not exclude a promise. Unresolved scope choices remain `UNK`.
 
-Recover facts from code, tests, specifications, authoritative documentation, owner statements, and prior
-reports. Documents prove intent only. Pin the source identity before drawing implementation conclusions.
+Apply Trace closure. Write Scope before any Audit and seal its final raw bytes with SHA-256. Store the digest with
+Audit inputs and in Review, outside Scope. Verify source, Scope and receipt identities at Audit acceptance, result
+reception and delivery. Every Audit must receive the same verified facts and explicit gaps.
 
-SSRE2-SCOPE.md is the sole owner of observed facts. It freezes:
+### 3. Produce and calibrate five Audits
 
-- source identity, authority order, claims, and supported-domain limits;
-- the observed Scientific Map and Identity Ledger, with material items located in code or evidence;
-- optional Domain Professor and sibling code-review artifact references;
-- the high-leverage focus and rationale for excluded incidental detail.
+Each Dimension applies only its operator to the same seal and returns one result: verdict, located findings,
+positive evidence, unproven ledger with closing paths, and decisive calibration basis. An Audit requesting a new
+observation returns its `CLM`/`COR` and expected distinction to the Scope owner; private evidence is invalid.
 
-Reuse a prior Design's Identity Ledger. Without one, create a Review-local ledger through Shared Doctrine.
-
-Apply Trace closure to the observed Map. Every material `CLM` and `COR` names its scientific subject and ends
-at a located `EVD` receipt or contradiction, or at an `UNK` evidence gap with the cheapest closing path. Every
-`EVD` targets at least one `CLM` or `COR`; reject dangling identities.
-
-Inspect a local variable only when Shared Doctrine makes it load-bearing. Follow a located local defect only far
-enough to explain its scientific consequence.
-
-When carrying forward debt or unproven items, account for every still-relevant item by stable identity or cite
-the complete prior section as an input. Omission must be explicit, never accidental.
-
-Write SSRE2-SCOPE.md, compute its content digest, and seal it before any Review Audit. A changed digest
-invalidates dependent results and requires a new Review Scope.
-
-Completion criterion: every Review Audit can answer its Scientific Dimension from the same sealed Review Scope
-without another Audit's conclusions. The Scope explains which quantity is represented in which unit, computed
-by which method, and returned under which regime and lifecycle state.
-
-### 2. Choose high-yield checks
-
-For each load-bearing claim or correspondence, choose the smallest check that could change its state or
-verdict. Prefer this order, skipping a rung when it cannot discriminate:
-
-1. static Scientific Map inspection, especially Quantity Contracts, method names, selectors, and state;
-2. existing reproducible evidence receipts and observable invariants;
-3. a declared relation between methods, states, representations, or limits;
-4. one targeted differential, metamorphic, convergence, conservation, or round-trip probe;
-5. an independent implementation, authoritative dataset, or external oracle.
-
-State the claim, quantity and unit normalization, expected discriminating observation, supported regime,
-command or location, and stopping condition before running a probe. Reuse an existing same-path test as
-consistency evidence; rerun it only when its environment or result is material. Add an independent probe only
-when it can challenge the same logic.
-
-Method, field, and result names are reviewed for quantity role, regime, transition, and returned-state meaning;
-unit metadata is reviewed for scale. File a naming finding only when ambiguity has a locatable scientific
-consequence; general naming taste belongs to code review.
-
-Completion criterion: every planned check can change a load-bearing claim state or close an `UNK` item. Include
-only probes with a stated discriminating result.
-
-### 3. Produce five Review Audits
-
-Read dimensions.md. Produce one Review Audit for each Scientific Dimension. SIM, SON, REL, EVI, and EVO each
-receive the sealed Review Scope and only their own operators. No Audit consumes, predicts, ranks, or suppresses
-another Review Result.
-
-Apply Shared Doctrine's Execution economy and record `ISOLATED` or `BOUNDED` assurance. Under `ISOLATED`,
-sibling results are unavailable. Under `BOUNDED`, each pass ignores available sibling output and the report
-retains the cognitive-isolation limitation. Gather deterministic observations once; judgments remain
-Dimension-owned.
-
-Each Audit returns one Review Result under the Review Result Policy below. A timeout or unavailable environment
-makes only affected claims UNPROVEN (environment); remaining Audits continue.
-
-When subagents are used, dispatch:
-
-- paths to Shared Doctrine, this contract, dimensions.md, and frozen SSRE2-SCOPE.md;
-- target path and pinned source identity;
-- only the assigned Scientific Dimension and output location;
-- READ_ONLY, the probe policy, stable finding IDs, and the user's report language.
-
-Return summaries stay compact: verdict, finding IDs, blocking `UNK` items, and artifact path. Full evidence stays
-in the audit artifact or Review Scope rather than being recopied into controller prompts.
-
-Completion criterion: all five Scientific Dimensions return a valid Review Result or a named environment
-UNPROVEN with environment evidence.
-
-### 4. Probe environment policy
-
-Prefer the project's declared reproducible environment. If it is unavailable, a time-boxed isolated
-environment may be created outside the target project. Record interpreter, dependency manifest, installation
-command, exit status, decisive output, and limitations.
-
-Do not install review dependencies into the target environment. A setup failure or timeout is an evidence
-limit, not a project defect. Provide the cheapest reproduction command and continue unaffected audits.
-
-### 5. Apply the Review Result Policy
-
-This section is the sole owner of Review Result shape, verdict calibration, finding identity, and environment
-fallback. dimensions.md owns only the five scientific operators.
-
-Every Review Audit returns:
-
-1. verdict — PASS, PASS WITH DEBT, UNPROVEN, or FAIL;
-2. findings — stable Dimension-owned IDs and located scientific consequences;
-3. positive evidence — facts supporting the verdict;
-4. unproven ledger — open load-bearing `CLM` or `COR` items and their cheapest closing paths;
-5. calibration proof — decisive basis, missing-evidence check, and non-promotion check.
+For child dispatch, read only [Dispatch](conditional-execution.md#dispatch). `BOUNDED` is valid when the caller
+does not require `ISOLATED`. Missing required assurance or a missing Audit makes execution incomplete.
 
 | Verdict | Required basis |
 |---|---|
-| FAIL | A locatable contradiction or triggerable supported-domain counterexample owned by this Scientific Dimension. |
-| UNPROVEN | A load-bearing claim lacks sufficiently independent evidence or the environment blocks review. Missing is not false. |
-| PASS WITH DEBT | The claim holds, but a concrete local non-blocking scientific architecture debt remains. |
-| PASS | Load-bearing claims have sufficient evidence, with no found counterexample or material debt in this Scientific Dimension. |
+| FAIL | A same-Dimension contradiction or triggerable supported-domain counterexample. |
+| UNPROVEN | A material claim lacks sufficiently independent evidence, including a blocked probe. |
+| PASS WITH DEBT | Supported claims retain concrete local, non-blocking scientific architecture debt. |
+| PASS | Material claims have sufficient evidence with no counterexample or material debt in this Dimension. |
 
-Every verdict includes:
+Within a Dimension, select `FAIL` when its contradiction basis is established; otherwise `UNPROVEN` while a
+material evidence obligation remains unresolved; otherwise `PASS WITH DEBT` for supported claims with local
+debt; otherwise `PASS` on its recorded sufficient-evidence basis. Retain every evidence gap under every verdict.
+For Evidenced, a scientific counterexample satisfies only the obligation it challenges; `FAIL` requires an
+evidence-specific contradiction such as false independence.
 
-- decisive basis — the Scientific Dimension's claim and located evidence that selects the verdict;
-- missing-evidence check — every load-bearing claim still lacking independent evidence;
-- non-promotion check — confirmation that missing evidence was not rewritten as contradiction.
+A finding identity is (Dimension, violated claim, evidence): `SON-n`, `SIM-n`, `REL-n`, `EVI-n`, or
+`EVO-n`. Record its state, location, counterexample/gap, consequence and minimal advisory repair. Merge only
+identical tuples with provenance. Findings dependent on owner intent retain `UNK-n` and stay outside repair order.
 
-Reject and rerun a result when FAIL lacks a same-dimension contradiction or supported-domain counterexample,
-or when UNPROVEN was mechanically promoted. Calibration checks the basis only; it does not choose a different
-verdict by comparing dimensions.
+Accept results only from their verified inputs and own basis. Return calibration defects to their Dimension;
+the controller supplies no replacement verdict and borrows no sibling judgment.
 
-Each finding belongs to one Scientific Dimension and has an ID (`SIM-n`, `SON-n`, `REL-n`, `EVI-n`, or
-`EVO-n`). The tuple of Scientific Dimension, violated claim, and evidence defines its identity. It records the
-claim, epistemic state, location, counterexample, scientific consequence, and minimal advisory repair
-direction. Merge only an identical tuple while preserving provenance.
+### 4. Apply Scope succession
 
-A finding depending on unresolved owner intent is marked depends on `UNK-n` and excluded from verdict and repair
-ordering until resolved. Across rounds, use persists-from old-ID and cleared-by action for continuity.
+Reasoning may retain a seal while registered identities, conditions and evidence states remain unchanged. A
+material new observation, failure receipt, evidence-state change or source drift requires a verified successor
+Scope in a new run. Preserve predecessor bytes/results and record the reason and digest.
 
-Completion criterion: every verdict token is supported by its calibration proof and every finding is
-locatable, falsifiable, and scientifically consequential.
+All five Audits judge the successor. Valid receipts may be reused after source, condition and independence checks.
+For a fixed commit, recover a verified copy of that pin; for current files, establish a new content identity.
+Unavailable recovery remains incomplete rather than silently switching source.
 
-### 6. Synthesize without compensation
+### 5. Synthesize and deliver
 
-Preserve all five Review Results and findings. The main session, not the Review Audits, validates same-locus
-groups and records each proposed repair's reinforces, costs, requires, or unresolved relations.
+After all five results freeze, validate same-locus and optional sibling relations. Preserve every verdict and
+order advisory actions by scientific consequence, dependency, reversibility, blast radius and owner priority.
 
-Synthesis may combine root-cause and repair prose. It may not compute a score, average, earliest-wins result,
-fixed dimension priority, or workflow-readiness decision. Order actions only by scientific consequence,
-dependency, reversibility, blast radius, and owner priority.
+After the delivery identity check, write SSRE2-REVIEW.md beside its sealed Scope with:
 
-Only after all five Review Results are frozen, relate Sibling References through validated same-locus findings
-without reranking either lane.
+- source/run/route, assurance, environment/probe references, deviations and target non-mutation;
+- Scope path/digest and five machine-extractable verdict rows in `SON → SIM → REL → EVI → EVO` order;
+- each result, validated relations, advisory repairs, owner questions and closing paths;
+- actual completed pair paths, distinguishing successor, superseded and incomplete rounds.
 
-Completion criterion: every proposed relation is validated or rejected against findings on both sides, and
-every materially affected dimension retains its original verdict.
-
-### 7. Write review artifacts
-
-SSRE2-REVIEW.md contains:
-
-1. source identity, Artifact Route, execution assurance, environment, probe manifest, and deviations;
-2. the SSRE2-SCOPE.md reference and content digest;
-3. the five Review Results in machine-extractable rows;
-4. each Scientific Dimension's findings, positive evidence, unproven ledger, and calibration proof;
-5. validated same-locus groups and cross-effects, including sibling findings by reference;
-6. evidence-anchored repair directions and cheapest closing probes;
-7. unresolved owner questions and a target-code non-mutation statement.
-
-These are content obligations, not mandatory separate sections. Consolidate them, cite located evidence once,
-and keep the report proportional to the decisive findings and remaining scientific uncertainty.
-
-SIM → SON → REL → EVI → EVO determines section order only.
-
-## Completion checklist
-
-Review stops only when every item is traceable:
-
-- the resolved Artifact Route and run identity are recorded;
-- source identity and the sole observed Scientific Map are sealed in SSRE2-SCOPE.md with a content digest;
-- the focus reaches dimensions, units, architecture, and load-bearing names without an incidental variable census;
-- all five Scientific Dimensions return or have a named environment UNPROVEN;
-- every material `CLM` and `COR` closes through an `EVD` or `UNK` relation;
-- every verdict retains its calibration proof and every finding is locatable and falsifiable;
-- all material interactions are validated without merging sibling software and SSRE2 scientific judgments;
-- the report states that target code was not modified.
+Completion requires the pair, verified identities, trace-closed intake, and five calibrated results on one seal.
+A scientific `UNPROVEN` can be complete. Missing source, route, Audit or required assurance is incomplete
+execution; preserve partial work and name the recovery path.

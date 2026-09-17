@@ -1,6 +1,6 @@
 interface:
   display_name: "SSRE2 Review"
-  short_description: "Audit after scientific implementation"
-  default_prompt: "Use $ssre2-review after scientific implementation to audit a pinned source through a trace-closed observed Scientific Map."
+  short_description: "Audit scientific software after implementation"
+  default_prompt: "Use $ssre2-review after implementation to audit scientific software against a trace-closed observed Scientific Map."
 policy:
   allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 # SSRE2 Skills
 
-**Design before scientific implementation. Audit after scientific implementation.**
+**Design scientific software before implementation. Audit scientific software after implementation.**
 
 SSRE2 is a pair of read-only agent skills for software that carries scientific claims. Design turns scientific
 intent into a traceable architecture before implementation. Review audits the observed implementation and its
@@ -98,7 +98,7 @@ such as `.claude/skills` when needed; SSRE2 does not maintain a second authored 
 Invoke each skill explicitly:
 
 ```text
-$ssre2-design Design the Scientific Map and scientific architecture before implementing this change. Keep target code read-only.
+$ssre2-design Design the Scientific Map and scientific architecture before implementation. Keep target code read-only.
 ```
 
 ```text
@@ -134,13 +134,14 @@ The five Scientific Dimensions ask independent questions:
 
 | Dimension | Design asks | Review asks |
 |---|---|---|
-| Simple (`SIM`) | What is the smallest coherent ownership model? | Is accidental scientific complexity present? |
 | Sonnet (`SON`) | Does the architecture faithfully represent the science? | Does implementation correspond to the declared science? |
+| Simple (`SIM`) | What is the smallest coherent ownership model? | Is accidental scientific complexity present? |
 | Reliable (`REL`) | Which invariants, regimes, failures, and states must be explicit? | Are those contracts enforced under supported conditions? |
 | Evidenced (`EVI`) | What evidence could challenge each claim? | Does sufficiently independent evidence actually challenge it? |
 | Evolvable (`EVO`) | How should a real scientific change propagate? | Is that propagation bounded and traceable? |
 
-One strong Dimension cannot compensate for a weak one.
+Sonnet asks for faithful correspondence, not forced symmetry or unsupported mathematical duality. Its first
+position is expository; no Dimension outranks or compensates for another.
 
 ## Evidence before confidence
 
@@ -159,13 +160,16 @@ machine aliases have one owner; equal dimensions do not imply equal scientific m
 - Artifacts use a non-root, run-scoped route and preserve existing reports.
 - `SSRE2-SCOPE.md` solely owns observed Scientific Map facts; `SSRE2-REVIEW.md` cites its digest and owns Review
   Results, findings, and validated relations.
+- Review seals Scope after discriminating observations. Material late facts create a successor run; Federation,
+  dispatch, and external probe details load only when their branches apply.
 - SSRE2 does not replace domain expertise, experimental replication, implementation tests, safety assessment,
   or regulatory review.
-- **Release posture: Stable.** Structural, installation, and independent Design-to-Review forward checks have
-  passed; behavior remains model-, project-, and evidence-dependent.
+- **Release posture: Candidate.** The [Validation record](dev/validation/README.md) records structural and
+  installation coverage while retaining `EVI UNPROVEN` until final-byte blind model replays are independently
+  graded.
 
-Read the [Shared Doctrine](.agents/skills/ssre2-design/references/shared-doctrine.md) for the complete normative
-semantics.
+Read the [Shared Doctrine](.agents/skills/ssre2-design/references/shared-doctrine.md) for core semantics and the
+conditional [Federation contract](.agents/skills/ssre2-design/references/federation.md) for sibling inputs.
 
 ## Compatibility
 
@@ -174,13 +178,15 @@ exercise installation into Codex and Claude Code. Shared frontmatter and Codex U
 descriptions:
 
 ```text
-SSRE2 Design  — Design before scientific implementation
-SSRE2 Review  — Audit after scientific implementation
+SSRE2 Design  — Design scientific software before implementation
+SSRE2 Review  — Audit scientific software after implementation
 ```
 
 `agents/openai.yaml` keeps Codex invocation explicit without changing shared semantics or adding host-specific
-fields to portable frontmatter. Installation compatibility does not claim identical behavior across agents or
-model versions.
+fields to portable frontmatter. Verify invocation policy in each deployed host.
+
+Validation records carry dates and pinned commit identities; no release schedule is promised. Installation
+compatibility does not claim identical behavior across agents or model versions.
 
 ## Development
 
@@ -191,8 +197,9 @@ npm test
 npm run release:check
 ```
 
-`npm test` validates the authored workspace offline. `npm run release:check` builds a clean release projection
-and installs it into temporary Codex and Claude Code project paths through the current `skills` CLI.
+`npm test` validates structural invariants offline and reports entrypoint size as a metric. `npm run release:check`
+builds a clean projection and installs each skill alone and both together into temporary Codex and Claude Code
+paths. Neither proves scientific behavior; see the [validation record](dev/validation/README.md).
 
 ## Contributing
 

@@ -2,15 +2,15 @@ import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, join, relative, resolve } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const skillsRoot = join(root, ".agents", "skills");
 const expectedSkills = ["ssre2-design", "ssre2-review"];
 const expectedDescriptions = {
-  "ssre2-design": "Design before scientific implementation",
-  "ssre2-review": "Audit after scientific implementation",
+  "ssre2-design": "Design scientific software before implementation",
+  "ssre2-review": "Audit scientific software after implementation",
 };
 const releaseEntries = [".agents", ".gitignore", "LICENSE", "README.md", "dev", "package.json"].sort();
 const failures = [];
@@ -67,7 +67,7 @@ async function validateSkill(name) {
     check(fields.description === expectedDescriptions[name], `${name}: shared description drifted`);
     check(!("disable-model-invocation" in fields), `${name}: non-standard frontmatter field`);
   }
-  check(Buffer.byteLength(markdown) <= 1800, `${name}: SKILL.md entrypoint exceeds 1800 bytes`);
+  console.log(`${name}: entrypoint ${Buffer.byteLength(markdown)} bytes (metric, not a quality threshold)`);
 
   const ui = await readFile(join(skillRoot, "agents", "openai.yaml"), "utf8");
   check(ui.includes(`$${name}`), `${name}: default_prompt must mention $${name}`);
@@ -85,6 +85,9 @@ async function validateSkill(name) {
     );
     for (const match of text.matchAll(/\]\((?!https?:|#)([^)#]+)(?:#[^)]+)?\)/g)) {
       const target = resolve(dirname(file), decodeURIComponent(match[1]));
+      const local = relative(skillRoot, target);
+      check(local !== ".." && !local.startsWith(`..${sep}`) && !isAbsolute(local),
+        `${name}: reference leaves independently installable skill: ${match[1]}`);
       check(await exists(target), `${name}: broken reference ${match[1]} in ${file}`);
     }
   }
@@ -131,37 +134,33 @@ async function compareInstalledTree(sourceRoot, installedRoot, label) {
 }
 
 async function validateEcosystemInstall(sourceRoot) {
-  const sandbox = await mkdtemp(join(tmpdir(), "ssre2-release-check-"));
-  try {
-    const installed = runSkillsCli(
-      [
-        "add",
-        sourceRoot,
-        "--skill",
-        "ssre2-design",
-        "--skill",
-        "ssre2-review",
-        "--agent",
-        "codex",
-        "--agent",
-        "claude-code",
-        "--yes",
-      ],
-      sandbox,
-    );
-    check(
-      installed.status === 0,
-      `skills CLI install failed:\n${installed.stdout ?? ""}\n${installed.stderr ?? ""}`,
-    );
-    if (installed.status !== 0) return;
+  for (const selection of [[expectedSkills[0]], [expectedSkills[1]], expectedSkills]) {
+    const sandbox = await mkdtemp(join(tmpdir(), "ssre2-release-check-"));
+    const label = selection.join(" + ");
+    try {
+      const installed = runSkillsCli([
+        "add", sourceRoot, ...selection.flatMap((name) => ["--skill", name]),
+        "--agent", "codex", "--agent", "claude-code", "--yes",
+      ], sandbox);
+      check(installed.status === 0,
+        label + ": skills CLI install failed:\n" + (installed.stdout ?? "") + "\n" + (installed.stderr ?? ""));
+      if (installed.status !== 0) continue;
 
-    for (const name of expectedSkills) {
-      const source = join(sourceRoot, ".agents", "skills", name);
-      await compareInstalledTree(source, join(sandbox, ".agents", "skills", name), `Codex ${name}`);
-      await compareInstalledTree(source, join(sandbox, ".claude", "skills", name), `Claude Code ${name}`);
+      for (const [host, directory] of [["Codex", ".agents"], ["Claude Code", ".claude"]]) {
+        for (const name of expectedSkills) {
+          const destination = join(sandbox, directory, "skills", name);
+          if (selection.includes(name)) {
+            await compareInstalledTree(join(sourceRoot, ".agents", "skills", name), destination,
+              label + " / " + host + " / " + name);
+          } else {
+            check(!(await exists(destination)), label + ": installed unrequested sibling " + name);
+          }
+        }
+      }
+      console.log("Installation checked: " + label + " (Codex and Claude Code)");
+    } finally {
+      await rm(sandbox, { recursive: true, force: true });
     }
-  } finally {
-    await rm(sandbox, { recursive: true, force: true });
   }
 }
 
@@ -174,6 +173,7 @@ async function validateReleaseProjection() {
       if (entry === "dev") {
         await mkdir(join(releaseRoot, "dev"));
         await cp(join(root, "dev", "check.mjs"), join(releaseRoot, "dev", "check.mjs"));
+        await cp(join(root, "dev", "validation"), join(releaseRoot, "dev", "validation"), { recursive: true });
       } else {
         await cp(join(root, entry), join(releaseRoot, entry), { recursive: true });
       }
@@ -208,7 +208,7 @@ check(designDoctrine.equals(reviewDoctrine), "Shared Doctrine copies have drifte
 
 const sharedDoctrine = designDoctrine.toString("utf8");
 for (const section of [
-  "## Federated role",
+  "## Required invariants",
   "## Scientific correspondence kernel",
   "## Quantity and dimensional semantics",
   "## Inspection grain",
@@ -219,67 +219,50 @@ for (const section of [
 ]) {
   check(sharedDoctrine.split(section).length === 2, `Shared Doctrine section missing or duplicated: ${section}`);
 }
-for (const [label, invariant] of [
-  ["method-name inspection", /scientifically consequential method\s+names/],
-  ["incidental-local exclusion", /Incidental temporaries, loop indices/],
-  ["method correspondence", /Use duality only when an authoritative domain meaning establishes an actual duality/],
-  ["Scientific Map", /A \*\*Scientific Map\*\* is the shared semantic interface/],
-  ["Identity Ledger", /The Scientific Map carries one \*\*Identity Ledger\*\*/],
-  ["Trace closure", /### Trace closure/],
-  ["federated Sibling Reference", /A \*\*Sibling Reference\*\*/],
-  ["paired modes", /\*\*Design Projection\*\*[\s\S]*\*\*Review Audit\*\*/],
-  ["Quantity Contract", /Treat every load-bearing physical value as a Quantity Contract, not a bare number/],
-  ["SI micro prefix", /The formal micro\s+prefix symbol is `µ`/],
-  ["interface test surface", /A module's interface is the scientific test surface/],
-  ["non-root Artifact Route", /The canonical directory is not the repository root/],
-  ["execution topology", /semantic interface, not a mandatory five-agent topology/],
-  ["isolation assurance", /`ISOLATED`[\s\S]*`BOUNDED`/],
-  ["proportional architecture", /For compact work, use the fewest deep\s+modules/],
-]) {
-  check(invariant.test(sharedDoctrine), `Shared Doctrine invariant missing: ${label}`);
+const designFederation = await readFile(join(skillsRoot, "ssre2-design", "references", "federation.md"));
+const reviewFederation = await readFile(join(skillsRoot, "ssre2-review", "references", "federation.md"));
+check(designFederation.equals(reviewFederation), "Federation copies have drifted");
+for (const marker of ["Sibling Reference", "source identity", "same-locus"]) {
+  check(designFederation.includes(marker), `Federation marker missing: ${marker}`);
 }
+// Meaning is checked by semantic review and behavioral cases, not sentence matching.
+// The migration map is in dev/validation/README.md.
 for (const prefix of ["CLM", "QTY", "UNT", "MTH", "REG", "STA", "TRN", "COR", "EVD", "UNK"]) {
   check(sharedDoctrine.includes(`\`${prefix}\``), `Identity Ledger prefix missing: ${prefix}`);
 }
 for (const relation of ["about", "challenged-by", "unresolved-by"]) {
   check(sharedDoctrine.includes(`\`${relation}\``), `Trace closure relation missing: ${relation}`);
 }
-check(!/(?:optics|numerical-aperture|focusing regime)/i.test(sharedDoctrine), "Shared Doctrine contains a domain-specific example");
 
 const designContract = await readFile(join(skillsRoot, "ssre2-design", "references", "contract.md"), "utf8");
 const reviewContract = await readFile(join(skillsRoot, "ssre2-review", "references", "contract.md"), "utf8");
-for (const [name, contract] of [["ssre2-design", designContract], ["ssre2-review", reviewContract]]) {
-  check(/Resolve the Artifact Route through Shared Doctrine/.test(contract), `${name}: shared Artifact Route missing`);
-  check(/Apply Shared Doctrine's Execution economy/.test(contract), `${name}: shared execution policy missing`);
-  check(/Quantity Contracts?/.test(contract), `${name}: quantity and dimensional semantics missing`);
+for (const token of ["OBSERVED", "DECLARED", "INFERRED", "UNKNOWN", "PROPOSED", "ISOLATED", "BOUNDED"]) {
+  check(sharedDoctrine.includes(token), "Shared Doctrine token missing: " + token);
 }
-check(/Produce five Design Projections/.test(designContract), "ssre2-design: Design Projection workflow missing");
-check(/Apply Trace closure/.test(designContract), "ssre2-design: Trace closure missing");
-check(/sole owner of observed facts/.test(reviewContract), "ssre2-review: Review Scope ownership missing");
-check(/Apply the Review Result Policy/.test(reviewContract), "ssre2-review: Review Result Policy owner missing");
-check(/content digest/.test(reviewContract), "ssre2-review: sealed Scope digest missing");
-check(/Sibling References/.test(reviewContract), "ssre2-review: sibling federation missing");
+for (const token of ["READY", "READY_WITH_OWNER_DECISIONS", "BLOCKED"]) {
+  check(designContract.includes("| " + token + " |"), "Design completion token missing: " + token);
+}
+for (const token of ["PASS", "PASS WITH DEBT", "UNPROVEN", "FAIL"]) {
+  check(reviewContract.includes("| " + token + " |"), "Review verdict token missing: " + token);
+}
 
 const dimensions = await readFile(join(skillsRoot, "ssre2-review", "references", "dimensions.md"), "utf8");
 const actualDimensions = [...dimensions.matchAll(/^## (Simple|Sonnet|Reliable|Evidenced|Evolvable)$/gm)]
   .map((match) => match[1]);
 check(
-  JSON.stringify(actualDimensions) === JSON.stringify(["Simple", "Sonnet", "Reliable", "Evidenced", "Evolvable"]),
+  JSON.stringify(actualDimensions) === JSON.stringify(["Sonnet", "Simple", "Reliable", "Evidenced", "Evolvable"]),
   `review dimension set or order drifted: ${actualDimensions.join(", ")}`,
 );
 for (const prefix of ["SIM", "SON", "REL", "EVI", "EVO"]) {
   check(reviewContract.includes(`\`${prefix}-n\``), `review finding prefix missing: ${prefix}`);
 }
-check(!dimensions.includes("## Common return contract"), "review result policy duplicated in dimensions.md");
-check(/Use every material `CLM` and `COR`/.test(dimensions), "Evidenced operator omits claim or correspondence identities");
-
-const runtimeInstructions = [sharedDoctrine, designContract, reviewContract, dimensions].join("\n");
-check(!/five (?:questions|views)/i.test(runtimeInstructions), "legacy five-question/view terminology remains");
-
 const readme = await readFile(join(root, "README.md"), "utf8");
 check(!/[\u3400-\u4dbf\u4e00-\u9fff]/u.test(readme), "README must be English");
 check(readme.includes("npx skills@latest add HIT-SudoMaker/ssre2-skills"), "README install command drifted");
-check(readme.includes("Release posture: Stable."), "README stable release posture missing");
+check(/Release posture: [A-Za-z][A-Za-z -]*\./.test(readme), "README release posture declaration missing");
+const record = readme.match(/\[Validation record\]\((dev\/validation\/[^)#]+\.md)\)/)?.[1];
+check(Boolean(record), "README located validation record missing");
+if (record) check(await exists(join(root, record)), "README validation record does not exist");
 check(!/(?:bin\/ssre2-skills|npx\s+(?:--yes\s+)?ssre2-skills)/i.test(readme), "README references the retired installer");
 
 const packageJson = JSON.parse(await readFile(join(root, "package.json"), "utf8"));

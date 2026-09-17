@@ -1,6 +1,6 @@
 interface:
   display_name: "SSRE2 Design"
-  short_description: "Design before scientific implementation"
-  default_prompt: "Use $ssre2-design before scientific implementation to produce a trace-closed prospective Scientific Map and scientific architecture."
+  short_description: "Design scientific software before implementation"
+  default_prompt: "Use $ssre2-design before implementation to design scientific software from a trace-closed prospective Scientific Map."
 policy:
   allow_implicit_invocation: false

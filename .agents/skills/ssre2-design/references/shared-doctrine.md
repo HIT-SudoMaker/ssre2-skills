@@ -1,242 +1,142 @@
 # SSRE2 Shared Doctrine
 
-This file defines only the semantics shared by SSRE2 Design and SSRE2 Review. Both entrypoints read it before
-their own contract; stages, artifact names, and verdict mechanics remain owned by the relevant mode.
+Shared scientific semantics; each mode contract owns its workflow and output. SSRE2 applies to falsifiable claims
+about mathematics, empirical facts, model behavior or the real world.
 
-## Scope and authority
+## Required invariants
 
-SSRE2 applies when work contains at least one scientific claim: a falsifiable statement made by code,
-documentation, tests, or results about mathematics, empirical facts, model behavior, or the real world.
-
-SSRE2 may analyze, design, and judge. It may propose concrete structures and implementation changes, but its
-target-code effect is always READ_ONLY.
-
-## Federated role
-
-Codebase design owns Module depth, Interfaces, Seams, Leverage, and Locality. Code review owns repository
-Standards and Spec fidelity. SSRE2 owns the scientific lane: Quantity Contracts, supported domains,
-computational methods, lifecycle, correspondence, and evidence able to challenge scientific claims.
-
-The lanes may share a pinned source identity, architecture facts, and artifact references. They keep their
-judgments separate: a sibling-lane finding cannot prove or disprove a scientific claim, and an SSRE2 verdict does
-not decide general code quality or workflow readiness. The process owner may relate same-locus findings
-without merging, reranking, or compensating for either lane.
-
-SSRE2 has no runtime dependency on a particular design, review, or orchestration skill.
-
-A **Sibling Reference** is an optional artifact pointer with a source identity and, when available, a located
-locus. Codebase design may supply Module and Interface facts; code review may supply
-separate Standards and Spec judgments. SSRE2 relates these only after its own Dimension outputs are frozen,
-and only by reference or validated same-locus. A sibling judgment never enters the scientific evidence chain.
+- Target source, tests, data, dependencies and configuration remain `READ_ONLY`. Write only run artifacts under
+  the resolved Artifact Route; implementation and repair remain `PROPOSED`.
+- The caller's requested scientific claims and authority order define scope. Repository evidence may resolve
+  routine gaps; owner choices that change scientific scope remain explicit.
+- Each round uses one Scientific Map and evidence snapshot. Every Projection or Audit names that input.
+- Missing evidence remains `UNKNOWN` or `UNPROVEN`. It never becomes proof, contradiction or permission to omit
+  an in-scope claim.
+- Five Dimension results remain separate. Synthesis preserves them without a score or compensating trade.
+- A mode crosses its completion gate or reports incomplete delivery with preserved work and a recovery path.
 
 ## Shared epistemic states
 
-Every load-bearing statement uses one of these states:
-
 | State | Meaning |
 |---|---|
-| OBSERVED | Directly supported by a locatable artifact or an executed probe. |
-| DECLARED | Stated by an authoritative document or owner; not proof that implementation matches intent. |
-| INFERRED | Derived from listed evidence and traceable to its premises. |
-| UNKNOWN | Current material cannot decide the matter; provide the cheapest closing path. |
-| PROPOSED | A design or repair offered by SSRE2 for owner selection. |
-
-Pre-implementation assumptions and post-implementation contradictions map to these states. Fluent prose is
-never a substitute for evidence.
+| OBSERVED | Supported by a located artifact or executed probe. |
+| DECLARED | Authoritative intent; not implementation proof. |
+| INFERRED | Derived from identified premises. |
+| UNKNOWN | Undecidable from current material; give the cheapest closing path. |
+| PROPOSED | Design or repair offered for owner selection. |
 
 ## Scientific correspondence kernel
 
-A **Scientific Map** is the shared semantic interface: a frozen, locatable map of the scientific objects,
-Quantity Contracts, methods, regimes, lifecycle, correspondences, owners, claims, and evidence in scope. Build
-it from architecture rather than a census of code tokens:
+A **Scientific Map** locates in-scope objects, Quantity Contracts, methods, regimes, lifecycle,
+correspondences, owners, claims and evidence. A **method family** contains materially different computations for
+one object or observable. A **regime** owns their supported conditions and selection rule. Model only lifecycle
+states the project supports.
 
-- **Scientific object** — the system, structure, model, field, observable, or result being represented.
-- **Quantity Contract** — a physical value's scientific role, dimension, measurement unit, scale,
-  representation, and material coordinate, shape, uncertainty, or tolerance semantics.
-- **Method family** — materially different computational methods that address the same object or observable.
-- **Regime** — the supported-domain conditions under which a method is intended to apply; a selector may be
-  explicit in code or implicit in caller choice.
-- **Scientific lifecycle** — the material states of preparation, computation, validation, interpretation,
-  publication, and re-entry, using only the states the project actually supports.
-- **Quantity correspondence** — the expected preservation of scientific role, dimension, and normalized value
-  across accepted units or representations.
-- **State correspondence** — how inputs, intermediate scientific states, and returned results map across
-  lifecycle transitions and method families.
-- **Method correspondence** — the expected relation between methods: agreement on overlap, a limiting or
-  refinement relation, a representation transform, complementary outputs, or another domain-supported
-  relation. Use duality only when an authoritative domain meaning establishes an actual duality.
+Correspondences state preserved quantity meaning/value, state transitions, or method relations such as overlap,
+limits, refinement, transforms or complementary outputs. Mathematical duality requires authoritative domain
+support; a shared interface is insufficient.
 
-The Scientific Map carries one **Identity Ledger**. Assign IDs only to material items that must survive a
-handoff or review round:
+The **Identity Ledger** keeps material identities stable across handoffs and rounds:
 
 | Prefix | Identity |
 |---|---|
 | `CLM` | scientific claim |
-| `QTY` / `UNT` | Quantity Contract / accepted measurement unit or alias |
+| `QTY` / `UNT` | Quantity Contract / accepted unit or alias |
 | `MTH` / `REG` | method / supported regime |
 | `STA` / `TRN` | lifecycle state / transition |
-| `COR` | quantity, state, or method correspondence |
+| `COR` | quantity, state or method correspondence |
 | `EVD` | evidence obligation or result |
 | `UNK` | unresolved material question |
 
 ### Trace closure
 
-The Scientific Map is a relation graph, not an inventory. Every material `CLM` or `COR` has:
+Every material `CLM` or `COR` has an `about` relation to its `QTY`, `UNT`, `MTH`, `REG`, `STA` or `TRN` subject
+and ends either `challenged-by` an `EVD` or `unresolved-by` an `UNK` with an executable closing path. Each `EVD`
+targets a claim or correspondence. Every semantic identity participates; dangling identities fail closure.
 
-- an `about` relation to at least one relevant `QTY`, `UNT`, `MTH`, `REG`, `STA`, or `TRN` identity; and
-- either a `challenged-by` relation to an `EVD`, or an `unresolved-by` relation to an `UNK` with the cheapest
-  executable closing path.
-
-Every `EVD` targets at least one `CLM` or `COR`; every material semantic identity participates in a located
-claim or correspondence. A dangling identity is a Map defect, not completeness.
-
-Design records an `EVD` as a prospective evidence obligation. Review re-observes that identity as a located
-receipt, contradiction, or explicit evidence gap. Reusing an ID preserves traceability, never epistemic state.
-
-A **Domain Professor** is an optional, cited domain reference or expertise provider. It may propose canonical
-vocabulary, Quantity Contracts, methods, regimes, lifecycle meanings, and candidate evidence. Its guidance
-enters as DECLARED or INFERRED, never as proof, and the kernel remains usable without one.
+An optional, cited **Domain Professor** may suggest meanings and evidence. Treat that advice as DECLARED or
+INFERRED until independently observed.
 
 ## Quantity and dimensional semantics
 
-Treat every load-bearing physical value as a Quantity Contract, not a bare number.
+A load-bearing physical value is a Quantity Contract: scientific role, dimension, unit/scale, representation,
+and material coordinates, shape, precision, tolerance or uncertainty. Equal dimensions do not imply equal meanings.
 
-A quantity value is the product of a numerical value and a unit. Dimension identifies the kind of physical
-dependence; unit and prefix select its scale. The unit symbols `m`, `µm`, `nm`, and `pm` therefore share the
-length dimension while representing different decimal scales. In SI notation, separate a numerical value from
-its unit symbol with a space, attach a prefix directly to its unit symbol, and preserve case. The formal micro
-prefix symbol is `µ`; an ASCII spelling such as `um` is an encoding alias only when an interface or schema
-declares and normalizes it.
-
-Dimensional compatibility is necessary but not sufficient: distinct quantities may have the same dimension.
-Method, field, and result names carry the quantity's scientific role; unit metadata carries its measurement
-scale. Give conversion, normalization, and accepted aliases one semantic owner, make scale changes observable,
-and compare quantities only after conversion to a declared compatible unit. Apply the same discipline to
-non-SI and quantities with unit one; dimensionless does not mean semantically anonymous.
+Assign conversion, normalization and accepted aliases one owner. Names convey scientific role; unit metadata
+conveys scale. Compare values in declared compatible units and expose scale changes, including non-SI and unit-one
+quantities. In SI notation, attach the prefix to the unit symbol and preserve case: `m`, `µm`, `nm` and `pm` share
+a dimension, not a scale. `um` is valid only as a declared normalized alias for `µm`.
 
 ## Inspection grain
 
-Default attention goes to the Scientific Map, modules and interfaces, scientifically consequential method
-names, method-family selection, supported-domain limits, lifecycle transitions, returned scientific states,
-invariants, and evidence. Prioritize public methods, selectors, computation owners, and unit-conversion seams
-over incidental helpers.
-
-Names are evidence of intended architecture, not proof. Inspect a method name when it communicates scientific
-role, regime, transition, or returned state. A naming concern becomes load-bearing only when it can misroute a
-method, hide a regime, confuse a state, duplicate ownership, or make a scientific claim untraceable.
-
-Inspect a local variable and its name only when it carries scientific meaning that can change a claim: quantity
-kind, dimension, unit, scale, coordinates, shape, precision, tolerance, regime selection, lifecycle state,
-invariant, randomness, or a scientific result. Incidental temporaries, loop indices, and mechanically renamed
-locals remain outside the focus unless a located defect makes them consequential.
+Inspect scientific architecture and public interfaces first: methods, selectors, regimes, transitions, returned
+states, invariants and evidence. Follow a local name or implementation detail only to a located consequence for
+quantity, scale, coordinates, shape, precision, tolerance, state, randomness or ownership. Incidental style is
+outside SSRE2 scope.
 
 ## Five Scientific Dimensions
 
-A **Scientific Dimension** is one stable question asked in both modes. A **Design Projection** returns its
-prospective obligations; a **Review Audit** returns its retrospective Review Result. All five receive one
-frozen Scientific Map and evidence snapshot, and no Dimension may authorize, overwrite, or compensate for
-another.
+A **Design Projection** supplies prospective obligations; a **Review Audit** supplies a retrospective result.
+All five use the same frozen Map and evidence snapshot, independently of sibling conclusions.
 
-| Dimension | Shared question |
+| Dimension | Question |
 |---|---|
-| **Simple** | Do quantities, scientific facts, method choice, state, and complexity have explicit owners behind sufficiently deep modules? |
-| **Sonnet** | Do quantity, method, lifecycle, and state correspondences evolve faithfully while real asymmetries remain visible? |
-| **Reliable** | Are dimensions, units, supported regimes, selection, invariants, lifecycle, failures, and re-entry explicit and observable? |
-| **Evidenced** | Does every load-bearing scientific claim or correspondence have evidence able to challenge it? |
-| **Evolvable** | Do real axes such as unit, scale, method, regime, representation, and state have owners with bounded propagation? |
+| **Sonnet** | Are scientific correspondences faithful, handoffs clear and real differences visible? |
+| **Simple** | Do scientific facts, choices and state have coherent owners behind deep modules? |
+| **Reliable** | Are quantity, regime, invariant, lifecycle, failure and re-entry contracts enforced observably? |
+| **Evidenced** | Can the evidence challenge every material claim and correspondence? |
+| **Evolvable** | Does change along a real scientific axis have bounded, traceable propagation? |
 
-The fixed order SIM → SON → REL → EVI → EVO stabilizes presentation only. It expresses no dependency,
-importance, or verdict priority.
+`SON → SIM → REL → EVI → EVO` is presentation order only. Read historical results by Dimension name.
 
 ## Mode correspondence
 
-Design and Review form a faithful pair, not identical workflows:
-
-| Design | Review | Preserved identity |
-|---|---|---|
-| prospective Design Frame | pinned Review Scope | claim, authority, supported domain |
-| prospective Scientific Map | observed Scientific Map | Identity Ledger |
-| proposed Quantity Contracts | observed inputs, conversions, and results | `QTY` and `UNT` IDs |
-| proposed method family and regime | observed implementation and selector | `MTH` and `REG` IDs |
-| proposed lifecycle and correspondence | observed transitions and returned states | `STA`, `TRN`, and `COR` IDs |
-| Design Projection | Review Audit | Scientific Dimension |
-| evidence obligation | receipt, contradiction, or explicit gap | `EVD` target and provenance |
-| Design completion | five Review Results | no promotion from intent to proof |
-
-Review may reuse Design identities, but a Design statement remains DECLARED until independently re-observed.
+Design's Frame, prospective Map and evidence obligations become Review's pinned Scope, observed Map and receipts
+or gaps. Preserve material IDs and re-observe every epistemic state. Design intent supplies no implementation
+proof; Design completion supplies no Review verdict.
 
 ## Sonnet kernel
 
-Sonnet means evolvable faithful correspondence, not structural symmetry. It imposes six obligations:
+Sonnet makes scientific relationships legible in program structure:
 
-1. **Grammar** — Quantity Contracts, methods, stages, states, and real variation axes are locatable.
-2. **Ownership** — each domain judgment has one semantic owner; raw observations may have many consumers.
-3. **Closure** — a known closed domain has one source of truth; callers do not guess legal combinations.
-4. **Rhythm** — the core flow follows data, proof, and lifecycle dependencies.
-5. **Faithful asymmetry** — differences in regime, precision, mechanism, certainty, failure, or re-entry are
-   named and localized.
-6. **Enforcement** — material correspondences have executable checks or negative-space guards.
+1. **Grammar** — concepts and real variation axes are locatable.
+2. **Ownership** — one owner makes each domain judgment; observations may have many consumers.
+3. **Closure** — one source defines a closed domain's legal combinations.
+4. **Rhythm** — flow follows data, proof and lifecycle dependencies; feedback has explicit responsibility.
+5. **Faithful asymmetry** — regime, precision, mechanism, certainty and failure differences stay visible.
+6. **Enforcement** — checks or negative-space guards expose broken correspondences and handoffs.
 
-Preserve real asymmetry. A mirrored role or uniform interface requires domain evidence that its meanings match.
+Mirrored roles require matching domain meanings. Feedback may be cyclic; responsibility remains explicit.
 
-## Non-compensation and synthesis
+## Evidence and synthesis
 
-One architectural fact may support independent judgments in several dimensions. Each judgment keeps its own
-dimension, claim, evidence, and state. Synthesis may connect them only through explicit relations:
+Green tests, coverage and same-path replay show consistency. Scientific evidence challenges public-interface
+claims through an independent oracle or a justified relation: dimensions, normalized agreement, convergence,
+conservation, limits or reversible transforms. State the expected relation, normalization and regime first.
+Shared formulas, data, expectations or conversions reduce independence.
 
-- same-locus — judgments point to the same architectural location or missing decision;
-- reinforces / costs — a proposal helps or harms a dimension;
-- requires — a proposal depends on another decision or item of evidence;
-- unresolved — the interaction cannot yet be predicted honestly.
-
-Synthesis does not compute an aggregate score, choose a winning dimension, or remove a judgment because one
-repair might address several dimensions.
-
-## Evidence independence
-
-Tests, coverage, green CI, or same-path replay establish consistency or regression stability; they do not
-automatically establish scientific correctness. Design plans evidence able to challenge the implementation.
-Review distinguishes independent oracles and differential or metamorphic relations from shared-source
-self-confirmation.
-
-A module's interface is the scientific test surface. Challenge observable Quantity Contracts, method selection,
-lifecycle transitions, and returned states through the same interface callers use; implementation-level checks
-locate causes but do not replace interface-level evidence.
-
-Quantity Contracts and method families create high-leverage evidence opportunities: dimensional invariants,
-unit-normalized agreement, convergence to a known limit, conserved quantities, reversible transforms, or
-independently implemented results. State the expected relation, unit normalization, and supported regime before
-comparison.
+Each judgment retains its Dimension, claim, evidence and state. After results freeze, synthesis may validate
+`same-locus`, `reinforces / costs`, `requires` and `unresolved` relations. It preserves every result.
 
 ## Artifact Route
 
-Resolve one run-scoped artifact directory before analysis: explicit caller directory, then a documented
-repository convention, then an allowed workspace supplied by the active workflow. If none exists, mark
-`Artifact Route` as an `UNKNOWN` `UNK` item, ask once, and stop.
+Resolve the artifact directory from the caller, a documented repository convention, or an allowed workflow
+workspace, in that order. Allocate a new run directory there; preserve existing artifacts. Scratch work belongs
+in an allowed ignored workspace or OS temporary storage.
 
-The canonical directory is not the repository root. Keep it inside the allowed location, allocate a new run,
-and preserve existing artifacts. Put scratch output in an existing ignored workspace or OS temporary storage.
-Reports use the caller's language while paths, identifiers, epistemic states, completion states, and verdicts
-remain English.
+If no route resolves, record `UNK`, ask once, and continue authorized read-only work. Artifact writes, Review
+Audits requiring a sealed Scope and complete-delivery claims wait for the route. Reports may use the caller's
+language; paths, IDs and state/verdict tokens remain English.
 
 ## Execution economy
 
-The five Scientific Dimensions are a semantic interface, not a mandatory five-agent topology. Build shared
-deterministic facts once, then preserve judgment independence through frozen inputs and named outputs.
+Collect shared facts once and use the smallest observation that can change a material state. Stop on a decisive
+basis or an explicit gap with its closing path. Cite facts once; expand decisive findings and unresolved gaps.
 
-Record execution assurance honestly. `ISOLATED` means each Dimension ran in a separate context that could not
-read sibling judgment. `BOUNDED` means ordered passes shared a context: each pass consumes only the frozen Map
-and its own operators, but cognitive isolation is not claimed. Use `ISOLATED` when consequence or contamination
-risk earns its cost; otherwise use `BOUNDED` and retain the limitation in the artifact.
+Five judgments do not require five agents. `ISOLATED` means separate contexts cannot read sibling judgments.
+`BOUNDED` means separate passes in one context exclude sibling results as inputs. Use the assurance required by
+the caller and justified by risk; report the boundary actually achieved.
 
-Prefer the smallest observation or probe capable of changing a claim state or verdict. Start with the Scientific
-Map and existing evidence; escalate to execution or an independent oracle only for unresolved load-bearing
-claims. Stop when the decisive basis and missing-evidence check are complete.
-
-Scale architecture and report detail to the consequence of the decision. For compact work, use the fewest deep
-modules that preserve clear semantic ownership; every proposed module passes a deletion test. Include code
-sketches, type catalogs, or extension seams only when they close a material interface, regime, lifecycle, or
-evidence choice.
-
-Efficiency never permits dropping a dimension, hiding an UNKNOWN, treating same-path evidence as independent,
-or replacing a scientific consequence with a style preference.
+Prefer deep modules with real ownership. Deleting one should expose its complexity to callers. An Adapter Seam
+requires an observed variation axis and two actual implementations; pure computation, responsibility handoffs
+and unit options require no speculative adapter.
