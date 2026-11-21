@@ -10,9 +10,9 @@ const skillsRoot = join(root, ".agents", "skills");
 const expectedSkills = ["ssre2-design", "ssre2-review"];
 const expectedDescriptions = {
   "ssre2-design": "Design scientific software before implementation",
-  "ssre2-review": "Audit scientific software after implementation",
+  "ssre2-review": "Review scientific software after implementation",
 };
-const releaseEntries = [".agents", ".gitignore", "LICENSE", "README.md", "dev", "package.json"].sort();
+const releaseEntries = [".agents", ".gitignore", "GLOSSARY.md", "LICENSE", "README.md", "dev", "package.json"].sort();
 const failures = [];
 
 function check(condition, message) {
@@ -196,54 +196,130 @@ for (const entry of releaseEntries) {
   check(await exists(join(root, entry)), `missing release entry: ${entry}`);
 }
 
-for (const legacy of [".claude", ".scratch", "bin", "history", "docs", "scripts", "skill-calibration", "CONTEXT.md"]) {
+for (const legacy of [".claude", "bin", "history", "docs", "scripts", "skill-calibration", "CONTEXT.md"]) {
   check(!(await exists(join(root, legacy))), `legacy or generated release content remains: ${legacy}`);
+}
+for (const legacy of [
+  ".agents/skills/ssre2-design/references/contract.md",
+  ".agents/skills/ssre2-design/references/cross-review.md",
+  ".agents/skills/ssre2-design/references/shared-doctrine.md",
+  ".agents/skills/ssre2-review/references/conditional-execution.md",
+  ".agents/skills/ssre2-review/references/contract.md",
+  ".agents/skills/ssre2-review/references/cross-review.md",
+  ".agents/skills/ssre2-review/references/shared-doctrine.md",
+  "dev/validation/cases/correspondence.md",
+]) {
+  check(!(await exists(join(root, legacy))), `legacy SSRE2 path remains: ${legacy}`);
 }
 
 for (const name of expectedSkills) await validateSkill(name);
 
-const designDoctrine = await readFile(join(skillsRoot, "ssre2-design", "references", "shared-doctrine.md"));
-const reviewDoctrine = await readFile(join(skillsRoot, "ssre2-review", "references", "shared-doctrine.md"));
-check(designDoctrine.equals(reviewDoctrine), "Shared Doctrine copies have drifted");
+const designKernel = await readFile(join(skillsRoot, "ssre2-design", "references", "scientific-kernel.md"));
+const reviewKernel = await readFile(join(skillsRoot, "ssre2-review", "references", "scientific-kernel.md"));
+check(designKernel.equals(reviewKernel), "Scientific Kernel copies have drifted");
 
-const sharedDoctrine = designDoctrine.toString("utf8");
+const scientificKernel = designKernel.toString("utf8");
 for (const section of [
-  "## Required invariants",
-  "## Scientific correspondence kernel",
-  "## Quantity and dimensional semantics",
-  "## Inspection grain",
-  "## Five Scientific Dimensions",
-  "## Mode correspondence",
-  "## Artifact Route",
-  "## Execution economy",
+  "## Invariants",
+  "## Interface defaults",
+  "## Language",
+  "## Epistemic states",
+  "## Scientific Map",
+  "### Identity Ledger",
+  "### Trace closure",
+  "## Records",
+  "### Open Items",
+  "## Use Record",
+  "## Run Summary",
+  "## Quantities",
+  "## Inspection",
+  "## Dimensions",
+  "## Evidence and methods",
+  "## Execution and delivery",
 ]) {
-  check(sharedDoctrine.split(section).length === 2, `Shared Doctrine section missing or duplicated: ${section}`);
+  check(scientificKernel.split(section).length === 2, `Scientific Kernel section missing or duplicated: ${section}`);
 }
 const designFederation = await readFile(join(skillsRoot, "ssre2-design", "references", "federation.md"));
 const reviewFederation = await readFile(join(skillsRoot, "ssre2-review", "references", "federation.md"));
 check(designFederation.equals(reviewFederation), "Federation copies have drifted");
 for (const marker of ["Sibling Reference", "source identity", "same-locus"]) {
-  check(designFederation.includes(marker), `Federation marker missing: ${marker}`);
+  check(designFederation.toString("utf8").includes(marker), `Federation marker missing: ${marker}`);
 }
-// Meaning is checked by semantic review and behavioral cases, not sentence matching.
-// The migration map is in dev/validation/README.md.
-for (const prefix of ["CLM", "QTY", "UNT", "MTH", "REG", "STA", "TRN", "COR", "EVD", "UNK"]) {
-  check(sharedDoctrine.includes(`\`${prefix}\``), `Identity Ledger prefix missing: ${prefix}`);
+const designReflexive = await readFile(join(skillsRoot, "ssre2-design", "references", "reflexive.md"));
+const reviewReflexive = await readFile(join(skillsRoot, "ssre2-review", "references", "reflexive.md"));
+check(designReflexive.equals(reviewReflexive), "Reflexive closure copies have drifted");
+for (const marker of ["# SSRE2 Reflexive Closure", "Freeze target bytes", "self-produced support", "successor run"]) {
+  check(designReflexive.toString("utf8").includes(marker), `Reflexive closure marker missing: ${marker}`);
 }
-for (const relation of ["about", "challenged-by", "unresolved-by"]) {
-  check(sharedDoctrine.includes(`\`${relation}\``), `Trace closure relation missing: ${relation}`);
+for (const term of [
+  "Target", "Scientific object", "Regime", "Method family", "Claim", "Correspondence", "Evidence plan", "Evidence",
+  "Unknown", "Blocker", "Basis", "Dimension", "Verdict", "Finding", "Decision", "Proposal", "Run result", "Use Record",
+  "Open Item", "Run Summary",
+]) {
+  check(scientificKernel.includes(`**${term}**`), `Canonical Scientific Kernel term missing: ${term}`);
+}
+for (const record of [
+  "Claim", "Correspondence", "Evidence plan", "Evidence", "Unknown", "Blocker", "Decision", "Proposal",
+  "Dimension result", "Run record",
+]) {
+  check(scientificKernel.includes(`| **${record}** |`), `Canonical record missing: ${record}`);
+}
+for (const identity of [
+  "CLM-unit-equivalent-results",
+  "COR-forward-inverse-reconstruction",
+  "EVD-unit-equivalence-reference",
+  "UNK-missing-independent-reference",
+]) {
+  check(scientificKernel.includes(identity), `Readable identity example missing: ${identity}`);
+}
+for (const field of [
+  "intended_use", "accepted_inputs", "supported_setting", "reference_evidence", "known_limits",
+  "human_responsibility", "lifecycle_monitoring",
+]) {
+  check(scientificKernel.includes(`| **${field}** |`), `Use Record field missing: ${field}`);
+}
+for (const field of [
+  "mode", "target_identity", "run_result", "artifact_paths", "mode_outcome", "assurance", "open_items",
+  "use_record", "runtime_provenance",
+]) {
+  check(scientificKernel.includes(`| **${field}** |`), `Run Summary field missing: ${field}`);
+}
+for (const field of [
+  "source_record", "kind", "affects", "reason", "delivery_blocking", "implementation_blocking", "closing_path",
+]) {
+  check(scientificKernel.includes(`| **${field}** |`), `Open Item field missing: ${field}`);
+}
+const runRecordRow = scientificKernel.match(/^\| \*\*Run record\*\* \|.*$/m)?.[0] ?? "";
+check(!runRecordRow.includes("Use Record"), "Use Record must remain a projection outside Run record");
+for (const invariant of [
+  "READ_ONLY", "Identity Ledger", "Trace closure", "SON", "SIM", "REL", "EVI", "EVO", "BOUNDED", "ISOLATED",
+]) {
+  check(scientificKernel.includes(invariant), `Scientific Kernel invariant missing: ${invariant}`);
 }
 
-const designContract = await readFile(join(skillsRoot, "ssre2-design", "references", "contract.md"), "utf8");
-const reviewContract = await readFile(join(skillsRoot, "ssre2-review", "references", "contract.md"), "utf8");
-for (const token of ["OBSERVED", "DECLARED", "INFERRED", "UNKNOWN", "PROPOSED", "ISOLATED", "BOUNDED"]) {
-  check(sharedDoctrine.includes(token), "Shared Doctrine token missing: " + token);
+const designMethod = await readFile(join(skillsRoot, "ssre2-design", "references", "method.md"), "utf8");
+const reviewMethod = await readFile(join(skillsRoot, "ssre2-review", "references", "method.md"), "utf8");
+for (const term of [
+  "blocking decisions", "delivered", "incomplete", "Trace closure", "NOT_ASSESSED", "Run Summary", "Open Item",
+]) {
+  check(designMethod.toLowerCase().includes(term.toLowerCase()), `Design method term missing: ${term}`);
 }
-for (const token of ["READY", "READY_WITH_OWNER_DECISIONS", "BLOCKED"]) {
-  check(designContract.includes("| " + token + " |"), "Design completion token missing: " + token);
+for (const verdict of ["FAIL", "UNPROVEN", "PASS"]) {
+  check(reviewMethod.includes(`| **${verdict}** |`), `Review verdict missing: ${verdict}`);
 }
-for (const token of ["PASS", "PASS WITH DEBT", "UNPROVEN", "FAIL"]) {
-  check(reviewContract.includes("| " + token + " |"), "Review verdict token missing: " + token);
+for (const term of ["Run Summary", "Open Item"]) {
+  check(reviewMethod.includes(term), `Review method term missing: ${term}`);
+}
+for (const name of expectedSkills) {
+  const entrypoint = await readFile(join(skillsRoot, name, "SKILL.md"), "utf8");
+  const prose = entrypoint.replace(/\s+/g, " ");
+  check(prose.includes("Run Summary"), `${name}: public return missing Run Summary`);
+  for (const pattern of [
+    /missing\s+prerequisite/, /unavailable source or tool/, /skipped required check/,
+    /affected artifact or conclusion/, /cheapest closing path/,
+  ]) {
+    check(pattern.test(prose), `${name}: completion disclosure missing: ${pattern}`);
+  }
 }
 
 const dimensions = await readFile(join(skillsRoot, "ssre2-review", "references", "dimensions.md"), "utf8");
@@ -253,17 +329,52 @@ check(
   JSON.stringify(actualDimensions) === JSON.stringify(["Sonnet", "Simple", "Reliable", "Evidenced", "Evolvable"]),
   `review dimension set or order drifted: ${actualDimensions.join(", ")}`,
 );
-for (const prefix of ["SIM", "SON", "REL", "EVI", "EVO"]) {
-  check(reviewContract.includes(`\`${prefix}-n\``), `review finding prefix missing: ${prefix}`);
-}
+const runtimeStateText = [scientificKernel, designMethod, reviewMethod, dimensions].join("\n");
+check(!runtimeStateText.includes("PASS WITH DEBT"), "combined debt verdict reintroduced");
+check(!runtimeStateText.includes("READY_WITH_OWNER_DECISIONS"), "combined Design readiness state reintroduced");
 const readme = await readFile(join(root, "README.md"), "utf8");
 check(!/[\u3400-\u4dbf\u4e00-\u9fff]/u.test(readme), "README must be English");
 check(readme.includes("npx skills@latest add HIT-SudoMaker/ssre2-skills"), "README install command drifted");
 check(/Release posture: [A-Za-z][A-Za-z -]*\./.test(readme), "README release posture declaration missing");
+check(readme.includes("SSRE2-SCOPE.md"), "README sealed Scope output missing");
+check(readme.includes("[SSRE2 language](GLOSSARY.md)"), "README canonical language link missing");
+check(readme.includes("## Minimal Run Summary"), "README Run Summary explanation missing");
+check(readme.includes("Open Item"), "README Open Item explanation missing");
 const record = readme.match(/\[Validation record\]\((dev\/validation\/[^)#]+\.md)\)/)?.[1];
 check(Boolean(record), "README located validation record missing");
 if (record) check(await exists(join(root, record)), "README validation record does not exist");
 check(!/(?:bin\/ssre2-skills|npx\s+(?:--yes\s+)?ssre2-skills)/i.test(readme), "README references the retired installer");
+
+const glossary = await readFile(join(root, "GLOSSARY.md"), "utf8");
+check(!/[\u3400-\u4dbf\u4e00-\u9fff]/u.test(glossary), "GLOSSARY must be English");
+const glossaryTerms = [...glossary.matchAll(/^\*\*([^*]+)\*\*:/gm)].map((match) => match[1]);
+const runtimeVocabulary = [
+  scientificKernel,
+  designMethod,
+  reviewMethod,
+  designFederation.toString("utf8"),
+  designReflexive.toString("utf8"),
+].join("\n").toLowerCase();
+for (const term of glossaryTerms) {
+  const canonical = term.replace(/\s+\([^)]*\)$/, "");
+  check(runtimeVocabulary.includes(canonical.toLowerCase()), `GLOSSARY term absent from runtime language: ${term}`);
+}
+
+const repositoryMarkdown = [
+  join(root, "README.md"),
+  join(root, "GLOSSARY.md"),
+  ...(await walk(join(root, "dev", "validation"))).filter((path) => path.endsWith(".md")),
+];
+for (const file of repositoryMarkdown) {
+  const text = await readFile(file, "utf8");
+  for (const match of text.matchAll(/\]\((?!https?:|#)([^)#]+)(?:#[^)]+)?\)/g)) {
+    const target = resolve(dirname(file), decodeURIComponent(match[1]));
+    const local = relative(root, target);
+    check(local !== ".." && !local.startsWith(`..${sep}`) && !isAbsolute(local),
+      `repository reference leaves the release: ${match[1]} in ${relative(root, file)}`);
+    check(await exists(target), `broken repository reference ${match[1]} in ${relative(root, file)}`);
+  }
+}
 
 const packageJson = JSON.parse(await readFile(join(root, "package.json"), "utf8"));
 const allowedPackageKeys = ["engines", "license", "private", "scripts", "type"].sort();

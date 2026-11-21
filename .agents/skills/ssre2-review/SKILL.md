@@ -1,17 +1,16 @@
 ---
 name: ssre2-review
-description: Audit scientific software after implementation
+description: Review scientific software after implementation
 ---
 
 # SSRE2 Review
 
-Freeze the requested source or file scope and audit it into SSRE2-SCOPE.md and SSRE2-REVIEW.md. Target source
-remains READ_ONLY.
+Review one natural-language request against a frozen target and deliver `SSRE2-SCOPE.md` plus
+`SSRE2-REVIEW.md`. The target remains `READ_ONLY`.
 
-Read [Shared Doctrine](references/shared-doctrine.md), then the [Review contract](references/contract.md) completely.
-Resolve source identity and the Artifact Route from caller and repository context. Continue authorized read-only
-collection while a delivery prerequisite remains unresolved; defer sealing and delivery.
+Read the [Scientific Kernel](references/scientific-kernel.md) and [Review method](references/method.md) in full.
+Read [Federation](references/federation.md) for a paired skill or supplied sibling design or review artifact.
 
-Read [Federation](references/federation.md) only when another design/review artifact or co-invoked skill is an input.
-
-Return the completed pair and evidence limits, or preserved partial work and its recovery path. Repairs remain advisory.
+Return the Kernel's Run Summary with the inspected target, accepted verdicts, and a consequential Finding if any
+verdict is **FAIL**. Name each missing prerequisite, unavailable source or tool, or skipped required check, its
+affected artifact or conclusion, and its cheapest closing path. Repairs remain `PROPOSED`.

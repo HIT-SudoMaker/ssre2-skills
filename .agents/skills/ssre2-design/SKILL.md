@@ -5,12 +5,11 @@ description: Design scientific software before implementation
 
 # SSRE2 Design
 
-Turn the requested scientific change into SSRE2-DESIGN.md. Target source remains READ_ONLY.
+Turn one natural-language scientific change into `SSRE2-DESIGN.md`. The target remains `READ_ONLY`.
 
-Read [Shared Doctrine](references/shared-doctrine.md), then the [Design contract](references/contract.md) completely.
-Resolve routine missing inputs from caller and repository context through authorized read-only inspection. Ask
-only when an open choice changes scientific scope or delivery; keep independent work moving.
+Read the [Scientific Kernel](references/scientific-kernel.md) and [Design method](references/method.md) in full.
+Read [Federation](references/federation.md) for a paired skill or supplied sibling design or review artifact.
 
-Read [Federation](references/federation.md) only when another design/review artifact or co-invoked skill is an input.
-
-Return the actual artifact path, completion state and closing paths for blockers. Implementation is later work.
+Return the Kernel's Run Summary with the Design method's assessed readiness. Name each missing prerequisite,
+unavailable source or tool, or skipped required check, its affected artifact or conclusion, and its cheapest
+closing path. Implementation is later work.
